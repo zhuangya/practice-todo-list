@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import Input from "./Input";
+import { fireEvent, render } from "@testing-library/react";
+import { Input } from "./Input";
 
 const setup = () => {
   const utils = render(<Input />);
