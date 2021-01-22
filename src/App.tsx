@@ -1,5 +1,5 @@
 import { Typography, Container } from "@material-ui/core";
-import Input from "./Input";
+import { TodoMvc } from "./TodoMvc";
 
 export default function App() {
   return (
@@ -7,7 +7,12 @@ export default function App() {
       <Typography align="center" display="block" variant="h1">
         todo
       </Typography>
-      <Input />
+
+      <TodoMvc />
+
+      <Typography align="center" display="block" variant="body2">
+        &copy; 2021
+      </Typography>
     </Container>
   );
 }
