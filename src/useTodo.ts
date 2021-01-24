@@ -1,21 +1,19 @@
 import { useReducer } from "react";
 import { v4 as uuid } from "uuid";
+import type {
+  ITodoItem,
+  ITodoList,
+  IActionLike,
+  IStatus,
+  IActionsType,
+} from "./types";
 
-export const actionsType = {
+const actionsType: IActionsType = {
   append: "appendTodo",
   toggle: "toggleTodo",
   clear: "clearCompleted",
   update: "updateTodo",
 };
-
-type ITodoItem = {
-  id: string;
-  content: string;
-  isCompleted: boolean;
-};
-
-type ITodoList = Array<ITodoItem>;
-type IActionLike = { type: string; payload?: any };
 
 function todoReducer(state: ITodoList, action: IActionLike) {
   switch (action.type) {
@@ -50,8 +48,6 @@ function todoReducer(state: ITodoList, action: IActionLike) {
       throw new Error("invalid todo action type");
   }
 }
-
-type IStatus = "all" | "completed" | "active";
 
 const identifyByFilter = (status: IStatus) => (todo: ITodoItem) => {
   if (status === "all") {
