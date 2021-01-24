@@ -5,6 +5,7 @@ export const actionsType = {
   append: "appendTodo",
   toggle: "toggleTodo",
   clear: "clearCompleted",
+  update: "updateTodo",
 };
 
 type ITodoItem = {
@@ -33,6 +34,17 @@ function todoReducer(state: ITodoList, action: IActionLike) {
     }
     case actionsType.clear: {
       return state.filter((todo) => !todo.isCompleted);
+    }
+    case actionsType.update: {
+      return state.map((todo) =>
+        todo.id === action.payload.id
+          ? {
+              ...todo,
+              todo: action.payload.todo,
+              isCompleted: action.payload.isCompleted,
+            }
+          : todo
+      );
     }
     default:
       throw new Error("invalid todo action type");
@@ -67,6 +79,13 @@ export function useTodo(initialState = [] as ITodoList, reducer = todoReducer) {
     });
   }
 
+  function updateTodo(todo: ITodoItem) {
+    dispatch({
+      type: actionsType.update,
+      payload: todo,
+    });
+  }
+
   function toggleTodo(id: string) {
     dispatch({ type: actionsType.toggle, payload: id });
   }
@@ -85,5 +104,6 @@ export function useTodo(initialState = [] as ITodoList, reducer = todoReducer) {
     toggleTodo,
     clearCompleted,
     getTodoListByFilter,
+    updateTodo,
   };
 }

@@ -122,3 +122,53 @@ test("should get correct todolist by filter", () => {
     ]
   `);
 });
+
+test("should update todo", () => {
+  const { result } = renderHook(() =>
+    useTodo([
+      {
+        id: "fake-uuid-1",
+        todo: "eat",
+        isCompleted: false,
+      },
+      {
+        id: "fake-uuid-2",
+        todo: "pray",
+        isCompleted: false,
+      },
+      {
+        id: "fake-uuid-3",
+        todo: "love",
+        isCompleted: false,
+      },
+    ])
+  );
+
+  act(() => {
+    result.current.updateTodo({
+      id: "fake-uuid-1",
+      todo: "chi",
+      isCompleted: false,
+    });
+  });
+
+  expect(result.current.todoList).toMatchInlineSnapshot(`
+    Array [
+      Object {
+        "id": "fake-uuid-1",
+        "isCompleted": false,
+        "todo": "chi",
+      },
+      Object {
+        "id": "fake-uuid-2",
+        "isCompleted": false,
+        "todo": "pray",
+      },
+      Object {
+        "id": "fake-uuid-3",
+        "isCompleted": false,
+        "todo": "love",
+      },
+    ]
+  `);
+});
