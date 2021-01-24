@@ -98,6 +98,10 @@ export function useTodo(initialState = [] as ITodoList, reducer = todoReducer) {
     return state.find((todo) => todo.id === id);
   }
 
+  function getActiveTodoCount() {
+    return getTodoListByFilter("active").length;
+  }
+
   return {
     todoList: state,
     getTodoById,
@@ -106,5 +110,7 @@ export function useTodo(initialState = [] as ITodoList, reducer = todoReducer) {
     clearCompleted,
     getTodoListByFilter,
     updateTodo,
+    getActiveTodoCount,
+    filters: ["all", "active", "completed"] as Array<IStatus>,
   };
 }
