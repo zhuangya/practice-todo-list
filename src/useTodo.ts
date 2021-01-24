@@ -10,7 +10,7 @@ export const actionsType = {
 
 type ITodoItem = {
   id: string;
-  todo: string;
+  content: string;
   isCompleted: boolean;
 };
 
@@ -40,7 +40,7 @@ function todoReducer(state: ITodoList, action: IActionLike) {
         todo.id === action.payload.id
           ? {
               ...todo,
-              todo: action.payload.todo,
+              content: action.payload.content,
               isCompleted: action.payload.isCompleted,
             }
           : todo
@@ -68,12 +68,12 @@ const identifyByFilter = (status: IStatus) => (todo: ITodoItem) => {
 export function useTodo(initialState = [] as ITodoList, reducer = todoReducer) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  function appendTodo(todo: string) {
+  function appendTodo(content: string) {
     dispatch({
       type: actionsType.append,
       payload: {
         id: uuid(),
-        todo,
+        content,
         isCompleted: false,
       },
     });

@@ -8,7 +8,7 @@ test("should append todo", () => {
     result.current.appendTodo("drink");
   });
 
-  expect(result.current.todoList[0].todo).toBe("drink");
+  expect(result.current.todoList[0].content).toBe("drink");
 });
 
 test("should toggle todo", () => {
@@ -18,7 +18,7 @@ test("should toggle todo", () => {
     result.current.appendTodo("switch");
   });
 
-  expect(result.current.todoList[0].todo).toBe("switch");
+  expect(result.current.todoList[0].content).toBe("switch");
   expect(result.current.todoList[0].isCompleted).toBe(false);
 
   act(() => {
@@ -33,17 +33,17 @@ test("should clear all completed", () => {
     useTodo([
       {
         id: "fake-uuid-1",
-        todo: "eat",
+        content: "eat",
         isCompleted: true,
       },
       {
         id: "fake-uuid-2",
-        todo: "pray",
+        content: "pray",
         isCompleted: true,
       },
       {
         id: "fake-uuid-3",
-        todo: "love",
+        content: "love",
         isCompleted: true,
       },
     ])
@@ -61,17 +61,17 @@ test("should get correct todolist by filter", () => {
     useTodo([
       {
         id: "fake-uuid-1",
-        todo: "eat",
+        content: "eat",
         isCompleted: false,
       },
       {
         id: "fake-uuid-2",
-        todo: "pray",
+        content: "pray",
         isCompleted: false,
       },
       {
         id: "fake-uuid-3",
-        todo: "love",
+        content: "love",
         isCompleted: true,
       },
     ])
@@ -80,19 +80,19 @@ test("should get correct todolist by filter", () => {
   expect(result.current.getTodoListByFilter("all")).toMatchInlineSnapshot(`
     Array [
       Object {
+        "content": "eat",
         "id": "fake-uuid-1",
         "isCompleted": false,
-        "todo": "eat",
       },
       Object {
+        "content": "pray",
         "id": "fake-uuid-2",
         "isCompleted": false,
-        "todo": "pray",
       },
       Object {
+        "content": "love",
         "id": "fake-uuid-3",
         "isCompleted": true,
-        "todo": "love",
       },
     ]
   `);
@@ -100,14 +100,14 @@ test("should get correct todolist by filter", () => {
   expect(result.current.getTodoListByFilter("active")).toMatchInlineSnapshot(`
     Array [
       Object {
+        "content": "eat",
         "id": "fake-uuid-1",
         "isCompleted": false,
-        "todo": "eat",
       },
       Object {
+        "content": "pray",
         "id": "fake-uuid-2",
         "isCompleted": false,
-        "todo": "pray",
       },
     ]
   `);
@@ -115,9 +115,9 @@ test("should get correct todolist by filter", () => {
     .toMatchInlineSnapshot(`
     Array [
       Object {
+        "content": "love",
         "id": "fake-uuid-3",
         "isCompleted": true,
-        "todo": "love",
       },
     ]
   `);
@@ -128,17 +128,17 @@ test("should update todo", () => {
     useTodo([
       {
         id: "fake-uuid-1",
-        todo: "eat",
+        content: "eat",
         isCompleted: false,
       },
       {
         id: "fake-uuid-2",
-        todo: "pray",
+        content: "pray",
         isCompleted: false,
       },
       {
         id: "fake-uuid-3",
-        todo: "love",
+        content: "love",
         isCompleted: false,
       },
     ])
@@ -147,7 +147,7 @@ test("should update todo", () => {
   act(() => {
     result.current.updateTodo({
       id: "fake-uuid-1",
-      todo: "chi",
+      content: "chi",
       isCompleted: false,
     });
   });
@@ -155,19 +155,19 @@ test("should update todo", () => {
   expect(result.current.todoList).toMatchInlineSnapshot(`
     Array [
       Object {
+        "content": "chi",
         "id": "fake-uuid-1",
         "isCompleted": false,
-        "todo": "chi",
       },
       Object {
+        "content": "pray",
         "id": "fake-uuid-2",
         "isCompleted": false,
-        "todo": "pray",
       },
       Object {
+        "content": "love",
         "id": "fake-uuid-3",
         "isCompleted": false,
-        "todo": "love",
       },
     ]
   `);
