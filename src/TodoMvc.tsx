@@ -1,8 +1,46 @@
+import { FC, KeyboardEvent, useState } from "react";
 import { Input } from "./Input";
 import { useTodo } from "./useTodo";
 import { Button, Divider, List, ListItem, Checkbox } from "@material-ui/core";
-import { useState } from "react";
-import type { IStatus } from "./types";
+import { ITodoItem, IStatus } from "./types";
+
+const UpdateBox: FC<{
+  todo: ITodoItem;
+  handleUpdate: (todo: ITodoItem) => void;
+}> = ({ todo, handleUpdate }) => {
+  const [isEditting, setIsEditting] = useState(() => false);
+  const [newTodo, setNewTodo] = useState(() => todo.content);
+
+  return (
+    <>
+      {isEditting ? (
+        <input
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+          onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => {
+            if (event.key === "Escape") {
+              setIsEditting(false);
+            } else if (event.key === "Enter") {
+              handleUpdate({
+                ...todo,
+                content: newTodo,
+              });
+              setIsEditting(false);
+            }
+          }}
+        />
+      ) : (
+        <span
+          onDoubleClick={() => {
+            setIsEditting(true);
+          }}
+        >
+          {todo.content}
+        </span>
+      )}
+    </>
+  );
+};
 
 export function TodoMvc() {
   const [activeFilter, setFilter] = useState<IStatus>(() => "all");
@@ -14,6 +52,7 @@ export function TodoMvc() {
     getActiveTodoCount,
     clearCompleted,
     removeTodo,
+    updateTodo,
   } = useTodo();
 
   return (
@@ -29,7 +68,7 @@ export function TodoMvc() {
               checked={todo.isCompleted}
               onChange={() => toggleTodo(todo.id)}
             />
-            {todo.content}
+            <UpdateBox todo={todo} handleUpdate={updateTodo} />
             <Button onClick={() => removeTodo(todo.id)}> x </Button>
           </ListItem>
         ))}

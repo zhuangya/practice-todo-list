@@ -1,4 +1,4 @@
-import { FC, useEffect, useCallback, useRef } from "react";
+import { FC, KeyboardEvent, useRef } from "react";
 import { TextField } from "@material-ui/core";
 
 export const Input: FC<{ onAppend?: (content: string) => void }> = ({
@@ -6,26 +6,21 @@ export const Input: FC<{ onAppend?: (content: string) => void }> = ({
 }) => {
   const ref = useRef<HTMLInputElement>(null);
 
-  const onKeyPressed = useCallback(
-    (event: KeyboardEvent) => {
-      if (event.code === "Enter" && ref.current !== null) {
-        onAppend && onAppend(ref.current.value);
-        ref.current.value = "";
-      }
-    },
-    [onAppend]
-  );
-
-  useEffect(() => {
-    document.addEventListener("keydown", onKeyPressed);
-    return () => {
-      document.removeEventListener("keydown", onKeyPressed);
-    };
-  }, [onKeyPressed]);
-
   return (
     <TextField
       inputRef={ref}
+      inputProps={{
+        onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => {
+          if (
+            event.key === "Enter" &&
+            ref.current !== null &&
+            ref.current.value !== ""
+          ) {
+            onAppend && onAppend(ref.current.value);
+            ref.current.value = "";
+          }
+        },
+      }}
       label="What needs to be done?"
       fullWidth
       type="text"

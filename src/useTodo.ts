@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useCallback, useReducer } from "react";
 import { v4 as uuid } from "uuid";
 import type {
   ITodoItem,
@@ -117,7 +117,7 @@ export function useTodo(initialState = [] as ITodoList, reducer = todoReducer) {
     toggleTodo,
     clearCompleted,
     getTodoListByFilter,
-    updateTodo,
+    updateTodo: useCallback((todo) => updateTodo(todo), []),
     getActiveTodoCount,
     removeTodo,
     filters: ["all", "active", "completed"] as Array<IStatus>,
