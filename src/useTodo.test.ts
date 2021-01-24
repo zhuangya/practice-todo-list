@@ -172,3 +172,33 @@ test("should update todo", () => {
     ]
   `);
 });
+
+test("should find todo by id", () => {
+  const { result } = renderHook(() =>
+    useTodo([
+      {
+        id: "fake-uuid-1",
+        content: "eat",
+        isCompleted: false,
+      },
+      {
+        id: "fake-uuid-2",
+        content: "pray",
+        isCompleted: false,
+      },
+      {
+        id: "fake-uuid-3",
+        content: "love",
+        isCompleted: false,
+      },
+    ])
+  );
+
+  expect(result.current.getTodoById("fake-uuid-3")).toStrictEqual({
+    id: "fake-uuid-3",
+    content: "love",
+    isCompleted: false,
+  });
+
+  expect(result.current.getTodoById("meh")).toBe(undefined);
+});

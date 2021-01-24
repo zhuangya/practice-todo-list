@@ -98,8 +98,13 @@ export function useTodo(initialState = [] as ITodoList, reducer = todoReducer) {
     return state.filter(identifyByFilter(status));
   }
 
+  function getTodoById(id: string) {
+    return state.find((todo) => todo.id === id);
+  }
+
   return {
     todoList: state,
+    getTodoById,
     appendTodo,
     toggleTodo,
     clearCompleted,
