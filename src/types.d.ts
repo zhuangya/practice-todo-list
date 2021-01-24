@@ -14,4 +14,5 @@ export type IActionsType = {
   toggle: "toggleTodo";
   clear: "clearCompleted";
   update: "updateTodo";
+  remove: "removeTodo";
 };

@@ -13,6 +13,7 @@ export function TodoMvc() {
     getTodoListByFilter,
     getActiveTodoCount,
     clearCompleted,
+    removeTodo,
   } = useTodo();
 
   return (
@@ -29,6 +30,7 @@ export function TodoMvc() {
               onChange={() => toggleTodo(todo.id)}
             />
             {todo.content}
+            <Button onClick={() => removeTodo(todo.id)}> x </Button>
           </ListItem>
         ))}
       </List>

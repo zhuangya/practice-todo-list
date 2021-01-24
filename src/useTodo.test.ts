@@ -202,3 +202,42 @@ test("should find todo by id", () => {
 
   expect(result.current.getTodoById("meh")).toBe(undefined);
 });
+
+test("should remove todo by id", () => {
+  const { result } = renderHook(() =>
+    useTodo([
+      {
+        id: "fake-uuid-1",
+        content: "eat",
+        isCompleted: false,
+      },
+      {
+        id: "fake-uuid-2",
+        content: "pray",
+        isCompleted: false,
+      },
+      {
+        id: "fake-uuid-3",
+        content: "love",
+        isCompleted: false,
+      },
+    ])
+  );
+
+  act(() => {
+    result.current.removeTodo("fake-uuid-1");
+  });
+
+  expect(result.current.todoList).toStrictEqual([
+    {
+      id: "fake-uuid-2",
+      content: "pray",
+      isCompleted: false,
+    },
+    {
+      id: "fake-uuid-3",
+      content: "love",
+      isCompleted: false,
+    },
+  ]);
+});

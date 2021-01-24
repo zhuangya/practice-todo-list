@@ -13,6 +13,7 @@ const actionsType: IActionsType = {
   toggle: "toggleTodo",
   clear: "clearCompleted",
   update: "updateTodo",
+  remove: "removeTodo",
 };
 
 function todoReducer(state: ITodoList, action: IActionLike) {
@@ -43,6 +44,9 @@ function todoReducer(state: ITodoList, action: IActionLike) {
             }
           : todo
       );
+    }
+    case actionsType.remove: {
+      return state.filter((todo) => todo.id !== action.payload);
     }
     default:
       throw new Error("invalid todo action type");
@@ -102,6 +106,10 @@ export function useTodo(initialState = [] as ITodoList, reducer = todoReducer) {
     return getTodoListByFilter("active").length;
   }
 
+  function removeTodo(id: string) {
+    dispatch({ type: actionsType.remove, payload: id });
+  }
+
   return {
     todoList: state,
     getTodoById,
@@ -111,6 +119,7 @@ export function useTodo(initialState = [] as ITodoList, reducer = todoReducer) {
     getTodoListByFilter,
     updateTodo,
     getActiveTodoCount,
+    removeTodo,
     filters: ["all", "active", "completed"] as Array<IStatus>,
   };
 }
