@@ -46,7 +46,7 @@ jobs:
           path: build/
   deploy:
     needs: [test, build]
-    # FIXME: write if ref here.
+    if: github.ref == 'refs/heads/mutant'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
