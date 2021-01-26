@@ -1,4 +1,4 @@
-name: CI
+name: test build and deploy
 
 on:
   push:
@@ -21,3 +21,16 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: test
         run: yarn test
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - name: Cache
+        uses: actions/cache@v2.1.3
+        with:
+          path: 'node_modules'
+          key: hash-${{ hashFiles('yarn.lock') }}
+      - name: install deps
+        run: yarn install --frozen-lockfile
+      - name: build
+        run: yarn build
