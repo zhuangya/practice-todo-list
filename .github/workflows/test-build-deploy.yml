@@ -44,3 +44,18 @@ jobs:
         with:
           name: webroot
           path: build/
+  deploy:
+    needs: [test, build]
+    # FIXME: write if ref here.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: webroot
+          path: build/
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: yarn add gh-pages
+      - run: yarn deploy:ci

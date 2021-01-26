@@ -25,6 +25,7 @@
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
+    "deploy:ci": "gh-pages -d build -u 'Ya Zhuang <zhuangya@users.noreply.github.com>'",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
