@@ -1,0 +1,62 @@
+name: test build and deploy
+
+on:
+  push:
+    branches: [ mutant ]
+  pull_request:
+    branches: [ mutant ]
+
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Cache
+        uses: actions/cache@v2.1.3
+        with:
+          path: 'node_modules'
+          key: hash-${{ hashFiles('yarn.lock') }}
+      - name: install deps
+        run: yarn install --frozen-lockfile
+      - name: test
+        run: yarn test
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Cache
+        uses: actions/cache@v2.1.3
+        with:
+          path: 'node_modules'
+          key: hash-${{ hashFiles('yarn.lock') }}
+      - name: install deps
+        run: yarn install --frozen-lockfile
+      - name: build
+        run: yarn build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: webroot
+          path: build/
+  deploy:
+    needs: [test, build]
+    if: github.ref == 'refs/heads/mutant'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: webroot
+          path: build/
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: git remote set-url origin https://zhuangya:${{ secrets.GITHUB_TOKEN }}@github.com/zhuangya/practice-todo-list
+      - run: yarn add gh-pages
+      - run: yarn deploy:ci
