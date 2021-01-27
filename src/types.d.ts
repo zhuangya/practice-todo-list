@@ -42,9 +42,15 @@ export type IClearEvent = {
   type: "CLEAR_COMPLETED";
 };
 
+export type ISetFilterEvent = {
+  type: "SET_FILTER";
+  filter: IStatus;
+};
+
 export type IMachineEvent =
   | IUpdateEvent
   | IAppendEvent
   | IRemoveEvent
   | IToggleEvent
-  | IClearEvent;
+  | IClearEvent
+  | ISetFilterEvent;

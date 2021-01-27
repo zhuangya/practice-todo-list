@@ -2,7 +2,7 @@ import { FC, KeyboardEvent, useState } from "react";
 import { Input } from "./Input";
 import { useTodo } from "./useTodo";
 import { Button, Divider, List, ListItem, Checkbox } from "@material-ui/core";
-import { ITodoItem, IStatus } from "./types";
+import { ITodoItem } from "./types";
 
 const UpdateBox: FC<{
   todo: ITodoItem;
@@ -43,12 +43,12 @@ const UpdateBox: FC<{
 };
 
 export function TodoMvc() {
-  const [activeFilter, setFilter] = useState<IStatus>(() => "all");
   const {
+    todoList,
+    setFilter,
     filters,
     toggleTodo,
     appendTodo,
-    getTodoListByFilter,
     getActiveTodoCount,
     clearCompleted,
     removeTodo,
@@ -62,7 +62,7 @@ export function TodoMvc() {
       <Divider />
 
       <List>
-        {getTodoListByFilter(activeFilter).map((todo) => (
+        {todoList.map((todo) => (
           <ListItem key={todo.id}>
             <Checkbox
               checked={todo.isCompleted}

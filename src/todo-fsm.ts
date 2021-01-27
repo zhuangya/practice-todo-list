@@ -1,6 +1,7 @@
 import { interpret, assign, createMachine } from "@xstate/fsm";
 import { v4 as uuid } from "uuid";
 import {
+  IStatus,
   IAppendEvent,
   ITodoList,
   ITodoItem,
@@ -19,12 +20,14 @@ function buildTodoItem(content: string): ITodoItem {
 
 type ITodoListContext = {
   list: ITodoList;
+  filter: IStatus;
 };
 
 type ITodoState = {
   value: "loaded";
   context: {
     list: ITodoList;
+    filter: IStatus;
   };
 };
 
@@ -37,6 +40,7 @@ export const todoListMachine = createMachine<
   initial: "loaded",
   context: {
     list: [] as ITodoList,
+    filter: "all",
   },
   states: {
     loaded: {
@@ -94,6 +98,13 @@ export const todoListMachine = createMachine<
           actions: [
             assign({
               list: (ctx) => ctx.list.filter(({ isCompleted }) => !isCompleted),
+            }),
+          ],
+        },
+        SET_FILTER: {
+          actions: [
+            assign({
+              filter: (_, action) => action.filter,
             }),
           ],
         },

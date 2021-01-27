@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { service } from "./todo-fsm";
 
 import type { ITodoItem, ITodoList, IStatus } from "./types";
@@ -20,7 +20,9 @@ export function useTodo() {
     service.start();
     service.subscribe((state) => {
       if (state.changed) {
-        setTodoList(state.context.list);
+        setTodoList(
+          state.context.list.filter(identifyByFilter(state.context.filter))
+        );
       }
     });
     return () => {
@@ -71,6 +73,10 @@ export function useTodo() {
     dispatch({ type: "REMOVE_TODO", id });
   }
 
+  function setFilter(filter: IStatus) {
+    dispatch({ type: "SET_FILTER", filter });
+  }
+
   return {
     todoList,
     getTodoById,
@@ -81,6 +87,7 @@ export function useTodo() {
     updateTodo,
     getActiveTodoCount,
     removeTodo,
+    setFilter,
     filters: ["all", "active", "completed"] as Array<IStatus>,
   };
 }
