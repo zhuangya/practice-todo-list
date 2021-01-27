@@ -16,3 +16,35 @@ export type IActionsType = {
   update: "updateTodo";
   remove: "removeTodo";
 };
+
+export type IUpdateEvent = {
+  type: "UPDATE_TODO";
+  id: string;
+  content: string;
+};
+
+export type IAppendEvent = {
+  type: "APPEND_TODO";
+  content: string;
+};
+
+export type IRemoveEvent = {
+  type: "REMOVE_TODO";
+  id: string;
+};
+
+export type IToggleEvent = {
+  type: "TOGGLE_TODO";
+  id: string;
+};
+
+export type IClearEvent = {
+  type: "CLEAR_COMPLETED";
+};
+
+export type IMachineEvent =
+  | IUpdateEvent
+  | IAppendEvent
+  | IRemoveEvent
+  | IToggleEvent
+  | IClearEvent;

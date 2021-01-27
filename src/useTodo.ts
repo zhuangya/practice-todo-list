@@ -1,57 +1,7 @@
-import { useCallback, useReducer } from "react";
-import { v4 as uuid } from "uuid";
-import type {
-  ITodoItem,
-  ITodoList,
-  IActionLike,
-  IStatus,
-  IActionsType,
-} from "./types";
+import { useCallback, useEffect, useState } from "react";
+import { service } from "./todo-fsm";
 
-const actionsType: IActionsType = {
-  append: "appendTodo",
-  toggle: "toggleTodo",
-  clear: "clearCompleted",
-  update: "updateTodo",
-  remove: "removeTodo",
-};
-
-function todoReducer(state: ITodoList, action: IActionLike) {
-  switch (action.type) {
-    case actionsType.append: {
-      return [...state, action.payload];
-    }
-    case actionsType.toggle: {
-      return state.map((todo) =>
-        todo.id === action.payload
-          ? {
-              ...todo,
-              isCompleted: !todo.isCompleted,
-            }
-          : todo
-      );
-    }
-    case actionsType.clear: {
-      return state.filter((todo) => !todo.isCompleted);
-    }
-    case actionsType.update: {
-      return state.map((todo) =>
-        todo.id === action.payload.id
-          ? {
-              ...todo,
-              content: action.payload.content,
-              isCompleted: action.payload.isCompleted,
-            }
-          : todo
-      );
-    }
-    case actionsType.remove: {
-      return state.filter((todo) => todo.id !== action.payload);
-    }
-    default:
-      throw new Error("invalid todo action type");
-  }
-}
+import type { ITodoItem, ITodoList, IStatus } from "./types";
 
 const identifyByFilter = (status: IStatus) => (todo: ITodoItem) => {
   if (status === "all") {
@@ -65,41 +15,52 @@ const identifyByFilter = (status: IStatus) => (todo: ITodoItem) => {
   }
 };
 
-export function useTodo(initialState = [] as ITodoList, reducer = todoReducer) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+export function useTodo() {
+  useEffect(() => {
+    service.start();
+    service.subscribe((state) => {
+      if (state.changed) {
+        setTodoList(state.context.list);
+      }
+    });
+    return () => {
+      service.stop();
+    };
+  }, []);
+
+  const [todoList, setTodoList] = useState<ITodoList>([] as ITodoList);
+
+  const dispatch = service.send;
 
   function appendTodo(content: string) {
     dispatch({
-      type: actionsType.append,
-      payload: {
-        id: uuid(),
-        content,
-        isCompleted: false,
-      },
+      type: "APPEND_TODO",
+      content,
     });
   }
 
   function updateTodo(todo: ITodoItem) {
     dispatch({
-      type: actionsType.update,
-      payload: todo,
+      type: "UPDATE_TODO",
+      id: todo.id,
+      content: todo.content,
     });
   }
 
   function toggleTodo(id: string) {
-    dispatch({ type: actionsType.toggle, payload: id });
+    dispatch({ type: "TOGGLE_TODO", id });
   }
 
   function clearCompleted() {
-    dispatch({ type: actionsType.clear });
+    dispatch({ type: "CLEAR_COMPLETED" });
   }
 
   function getTodoListByFilter(status: IStatus = "all") {
-    return state.filter(identifyByFilter(status));
+    return service.state.context.list.filter(identifyByFilter(status));
   }
 
   function getTodoById(id: string) {
-    return state.find((todo) => todo.id === id);
+    return service.state.context.list.find((todo) => todo.id === id);
   }
 
   function getActiveTodoCount() {
@@ -107,17 +68,17 @@ export function useTodo(initialState = [] as ITodoList, reducer = todoReducer) {
   }
 
   function removeTodo(id: string) {
-    dispatch({ type: actionsType.remove, payload: id });
+    dispatch({ type: "REMOVE_TODO", id });
   }
 
   return {
-    todoList: state,
+    todoList,
     getTodoById,
     appendTodo,
     toggleTodo,
     clearCompleted,
     getTodoListByFilter,
-    updateTodo: useCallback((todo) => updateTodo(todo), []),
+    updateTodo,
     getActiveTodoCount,
     removeTodo,
     filters: ["all", "active", "completed"] as Array<IStatus>,

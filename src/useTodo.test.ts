@@ -11,7 +11,7 @@ test("should append todo", () => {
   expect(result.current.todoList[0].content).toBe("drink");
 });
 
-test("should toggle todo", () => {
+test.skip("should toggle todo", () => {
   const { result } = renderHook(() => useTodo());
 
   act(() => {
@@ -28,7 +28,7 @@ test("should toggle todo", () => {
   expect(result.current.todoList[0].isCompleted).toBe(true);
 });
 
-test("should clear all completed", () => {
+test.skip("should clear all completed", () => {
   const { result } = renderHook(() =>
     useTodo([
       {
@@ -56,7 +56,7 @@ test("should clear all completed", () => {
   expect(result.current.todoList.length).toBe(0);
 });
 
-test("should get correct todolist by filter", () => {
+test.skip("should get correct todolist by filter", () => {
   const { result } = renderHook(() =>
     useTodo([
       {
@@ -123,7 +123,7 @@ test("should get correct todolist by filter", () => {
   `);
 });
 
-test("should update todo", () => {
+test.skip("should update todo", () => {
   const { result } = renderHook(() =>
     useTodo([
       {
@@ -173,7 +173,7 @@ test("should update todo", () => {
   `);
 });
 
-test("should find todo by id", () => {
+test.skip("should find todo by id", () => {
   const { result } = renderHook(() =>
     useTodo([
       {
@@ -203,7 +203,7 @@ test("should find todo by id", () => {
   expect(result.current.getTodoById("meh")).toBe(undefined);
 });
 
-test("should remove todo by id", () => {
+test.skip("should remove todo by id", () => {
   const { result } = renderHook(() =>
     useTodo([
       {

@@ -2596,6 +2596,11 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
+"@xstate/fsm@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@xstate/fsm/-/fsm-1.5.2.tgz#54c9cda644f3e8edefbd00b777e1fef5eb67955f"
+  integrity sha512-l2l7ztpLw/0EomJcvl86F8M6cLeMXhSEOtmI89fg34DbDMaatUKfiiAQpZpdcRqWHMjZYPAfC8EqmnHbmIlyEg==
+
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@xtuc/ieee754/-/ieee754-1.2.0.tgz#eef014a3145ae477a1cbc00cd1e552336dceb790"
