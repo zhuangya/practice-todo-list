@@ -1,4 +1,5 @@
 import { renderHook, act } from "@testing-library/react-hooks";
+import { ITodoItem } from "./types";
 import { useTodo } from "./useTodo";
 
 test("should append todo", () => {
@@ -11,21 +12,34 @@ test("should append todo", () => {
   expect(result.current.todoList[0].content).toBe("drink");
 });
 
-test.skip("should toggle todo", () => {
+test("should toggle todo", () => {
   const { result } = renderHook(() => useTodo());
+
+  const findByContent = (content: string): ITodoItem => {
+    const ret = result.current.todoList.find(
+      (todo: ITodoItem) => todo.content === content
+    );
+    if (ret === undefined) {
+      throw new Error("content not found");
+    }
+
+    return ret;
+  };
 
   act(() => {
     result.current.appendTodo("switch");
   });
 
-  expect(result.current.todoList[0].content).toBe("switch");
-  expect(result.current.todoList[0].isCompleted).toBe(false);
+  const target = findByContent("switch");
+
+  expect(target.content).toBe("switch");
+  expect(target.isCompleted).toBe(false);
 
   act(() => {
-    result.current.toggleTodo(result.current.todoList[0].id);
+    result.current.toggleTodo(target.id);
   });
 
-  expect(result.current.todoList[0].isCompleted).toBe(true);
+  expect(findByContent("switch").isCompleted).toBe(true);
 });
 
 test.skip("should clear all completed", () => {
