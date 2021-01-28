@@ -40,9 +40,6 @@ export function useTodo() {
 
         if (persistedValue) {
           service.send({
-            type: "LAUNCH",
-          });
-          service.send({
             type: "LOAD",
             context: persistedValue,
           });
