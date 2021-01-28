@@ -8,6 +8,7 @@ export const Input: FC<{ onAppend?: (content: string) => void }> = ({
 
   return (
     <TextField
+      autoFocus={true}
       inputRef={ref}
       inputProps={{
         onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => {
