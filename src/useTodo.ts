@@ -25,6 +25,7 @@ export function useTodo() {
         setTodoList(
           state.context.list.filter(identifyByFilter(state.context.filter))
         );
+        setCurrentFilter(state.context.filter);
 
         window.indexedDB && set(PERSIST_KEY, state.context);
       }
@@ -63,6 +64,7 @@ export function useTodo() {
   }, []);
 
   const [todoList, setTodoList] = useState<ITodoList>([] as ITodoList);
+  const [currentFilter, setCurrentFilter] = useState<string>(() => "");
 
   const dispatch = service.send;
 
@@ -110,6 +112,7 @@ export function useTodo() {
   }
 
   return {
+    filter: currentFilter,
     todoList,
     getTodoById,
     appendTodo,

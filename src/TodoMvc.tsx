@@ -1,8 +1,16 @@
 import { FC, KeyboardEvent, useState } from "react";
 import { Input } from "./Input";
 import { useTodo } from "./useTodo";
-import { Button, Divider, List, ListItem, Checkbox } from "@material-ui/core";
+import {
+  ListItem,
+  Typography,
+  Button,
+  Box,
+  List,
+  Checkbox,
+} from "@material-ui/core";
 import { ITodoItem } from "./types";
+import { TodoContent, Item, UpdateInput } from "./ui";
 
 const UpdateBox: FC<{
   todo: ITodoItem;
@@ -12,9 +20,9 @@ const UpdateBox: FC<{
   const [newTodo, setNewTodo] = useState(() => todo.content);
 
   return (
-    <>
+    <TodoContent>
       {isEditting ? (
-        <input
+        <UpdateInput
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
           onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => {
@@ -30,21 +38,24 @@ const UpdateBox: FC<{
           }}
         />
       ) : (
-        <span
+        <Typography
+          variant="body2"
+          sx={{ fontSize: 18 }}
           onDoubleClick={() => {
             setIsEditting(true);
           }}
         >
           {todo.content}
-        </span>
+        </Typography>
       )}
-    </>
+    </TodoContent>
   );
 };
 
 export function TodoMvc() {
   const {
     todoList,
+    filter: currentFilter,
     setFilter,
     filters,
     toggleTodo,
@@ -59,30 +70,48 @@ export function TodoMvc() {
     <>
       <Input onAppend={(content) => appendTodo(content)} />
 
-      <Divider />
-
       <List>
         {todoList.map((todo) => (
-          <ListItem key={todo.id}>
+          <Item as={ListItem} key={todo.id}>
             <Checkbox
               checked={todo.isCompleted}
               onChange={() => toggleTodo(todo.id)}
             />
             <UpdateBox todo={todo} handleUpdate={updateTodo} />
-            <Button onClick={() => removeTodo(todo.id)}> x </Button>
-          </ListItem>
+            <Button className="op" onClick={() => removeTodo(todo.id)}>
+              {" "}
+              x{" "}
+            </Button>
+          </Item>
         ))}
       </List>
 
-      {filters.map((filter) => (
-        <Button key={filter} onClick={() => setFilter(filter)}>
-          {filter}
-        </Button>
-      ))}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "20px",
+        }}
+      >
+        <Typography variant="body2">
+          {" "}
+          {getActiveTodoCount() + " active todo(s)."}{" "}
+        </Typography>
 
-      <p> {getActiveTodoCount() + " active todo(s)."} </p>
+        <section>
+          {filters.map((filter) => (
+            <Button
+              variant={filter === currentFilter ? "outlined" : "text"}
+              key={filter}
+              onClick={() => setFilter(filter)}
+            >
+              {filter}
+            </Button>
+          ))}
+        </section>
 
-      <Button onClick={() => clearCompleted()}>Clear</Button>
+        <Button onClick={() => clearCompleted()}>Clear</Button>
+      </Box>
     </>
   );
 }
