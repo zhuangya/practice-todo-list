@@ -14,6 +14,9 @@ export default function App() {
         <Footer>
           <Typography align="center" display="block" variant="body2">
             &copy; 2021
+            <a href="https://github.com/zhuangya/practice-todo-list">
+              Source Code
+            </a>
           </Typography>
         </Footer>
       </Wrapper>
