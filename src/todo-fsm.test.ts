@@ -9,10 +9,13 @@ describe("test todo list machine", () => {
   const { initialState } = todoListMachine;
 
   it("should append", () => {
-    const { context } = todoListMachine.transition(initialState, {
-      type: "APPEND_TODO",
-      content: "hello world",
-    });
+    const { context } = todoListMachine.transition(
+      todoListMachine.transition(initialState, "LAUNCH"),
+      {
+        type: "APPEND_TODO",
+        content: "hello world",
+      }
+    );
 
     expect(context).toStrictEqual({
       filter: "all",
@@ -27,10 +30,13 @@ describe("test todo list machine", () => {
   });
 
   it("should toggle", () => {
-    const baseState = todoListMachine.transition(initialState, {
-      type: "APPEND_TODO",
-      content: "hello world",
-    });
+    const baseState = todoListMachine.transition(
+      todoListMachine.transition(initialState, "LAUNCH"),
+      {
+        type: "APPEND_TODO",
+        content: "hello world",
+      }
+    );
 
     const { context } = todoListMachine.transition(baseState, {
       type: "TOGGLE_TODO",
@@ -50,10 +56,13 @@ describe("test todo list machine", () => {
   });
 
   it("should remove todo", () => {
-    const baseState = todoListMachine.transition(initialState, {
-      type: "APPEND_TODO",
-      content: "hello world",
-    });
+    const baseState = todoListMachine.transition(
+      todoListMachine.transition(initialState, "LAUNCH"),
+      {
+        type: "APPEND_TODO",
+        content: "hello world",
+      }
+    );
 
     const { context } = todoListMachine.transition(baseState, {
       type: "REMOVE_TODO",
@@ -67,10 +76,13 @@ describe("test todo list machine", () => {
   });
 
   it("should update todo", () => {
-    const baseState = todoListMachine.transition(initialState, {
-      type: "APPEND_TODO",
-      content: "hello world",
-    });
+    const baseState = todoListMachine.transition(
+      todoListMachine.transition(initialState, "LAUNCH"),
+      {
+        type: "APPEND_TODO",
+        content: "hello world",
+      }
+    );
 
     const { context } = todoListMachine.transition(baseState, {
       type: "UPDATE_TODO",
@@ -93,10 +105,13 @@ describe("test todo list machine", () => {
   it.each(["active", "all", "completed"] as Array<IStatus>)(
     "should set filter %s",
     (filter: IStatus) => {
-      const { context } = todoListMachine.transition(initialState, {
-        type: "SET_FILTER",
-        filter,
-      });
+      const { context } = todoListMachine.transition(
+        todoListMachine.transition(initialState, "LAUNCH"),
+        {
+          type: "SET_FILTER",
+          filter,
+        }
+      );
 
       expect(context.filter).toBe(filter);
     }

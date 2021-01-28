@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { service } from "./todo-fsm";
+import { get, set } from "idb-keyval";
 
 import type { ITodoItem, ITodoList, IStatus } from "./types";
+
+const PERSIST_KEY = "_persiste:todo-list-app";
 
 const identifyByFilter = (status: IStatus) => (todo: ITodoItem) => {
   if (status === "all") {
@@ -17,14 +20,46 @@ const identifyByFilter = (status: IStatus) => (todo: ITodoItem) => {
 
 export function useTodo() {
   useEffect(() => {
-    service.start();
     service.subscribe((state) => {
       if (state.changed) {
         setTodoList(
           state.context.list.filter(identifyByFilter(state.context.filter))
         );
+
+        window.indexedDB && set(PERSIST_KEY, state.context);
       }
     });
+
+    service.start();
+
+    const launch = () => service.send("LAUNCH");
+
+    async function launchWithPersistedValue() {
+      try {
+        const persistedValue = await get(PERSIST_KEY);
+
+        if (persistedValue) {
+          service.send({
+            type: "LAUNCH",
+          });
+          service.send({
+            type: "LOAD",
+            context: persistedValue,
+          });
+        } else {
+          launch();
+        }
+      } catch (e) {
+        launch();
+      }
+    }
+
+    if (window.indexedDB) {
+      launchWithPersistedValue();
+    } else {
+      launch();
+    }
+
     return () => {
       service.stop();
     };

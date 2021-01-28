@@ -23,13 +23,15 @@ type ITodoListContext = {
   filter: IStatus;
 };
 
-type ITodoState = {
-  value: "loaded";
-  context: {
-    list: ITodoList;
-    filter: IStatus;
-  };
-};
+type ITodoState =
+  | {
+      value: "init";
+      context: ITodoListContext;
+    }
+  | {
+      value: "loaded";
+      context: ITodoListContext;
+    };
 
 export const todoListMachine = createMachine<
   ITodoListContext,
@@ -37,12 +39,28 @@ export const todoListMachine = createMachine<
   ITodoState
 >({
   id: "todo-list",
-  initial: "loaded",
+  initial: "init",
   context: {
     list: [] as ITodoList,
     filter: "all",
   },
   states: {
+    init: {
+      on: {
+        LAUNCH: {
+          target: "loaded",
+        },
+        LOAD: {
+          target: "loaded",
+          actions: [
+            assign({
+              list: (_, action) => action.context.list,
+              filter: (_, action) => action.context.filter,
+            }),
+          ],
+        },
+      },
+    },
     loaded: {
       on: {
         APPEND_TODO: {
