@@ -47,10 +47,21 @@ export type ISetFilterEvent = {
   filter: IStatus;
 };
 
+export type ILoadEvent = {
+  type: "LOAD";
+  context: any;
+};
+
+export type ILaunchEvent = {
+  type: "LAUNCH";
+};
+
 export type IMachineEvent =
   | IUpdateEvent
   | IAppendEvent
   | IRemoveEvent
   | IToggleEvent
   | IClearEvent
-  | ISetFilterEvent;
+  | ISetFilterEvent
+  | ILoadEvent
+  | ILaunchEvent;
